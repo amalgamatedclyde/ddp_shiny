@@ -2,13 +2,23 @@ library(shiny)
 shinyUI(fluidPage(
   tags$head(
     tags$style(HTML("
-h1 {color: firebrick;}"
-))
-  ),
+h1 {color: firebrick;}
+div #rss {margin-left: 60%; margin-top: -400px; margin-left: 70%;}
+.col-sm-8 {float:left}                    "
+))),
   # Application title
   headerPanel("Polynomial Trend Spotter"),
 
   # Sidebar with a slider input
+  mainPanel(withMathJax(helpText(
+  h4("The scatterplot shown below is a polynomial function with normally-distributed noise added to it.
+    It has the form: $$y = ax^5 + bx^4 + cx^3 + dx^2 + x + constant +\\epsilon$$
+    where epsilon is the noise term and any of the coefficients can be zero."),
+  h4(" Can you guess the degree of the polynomial?"),
+  p("The side panel can help you check your guess."),
+  plotOutput("plot1", height = 600, width = 600),
+  tableOutput("rss")))),
+  
   sidebarPanel(
     p("You can reduce the noise if detection of the polynomial signal is too difficult. The noise slider 
       changes the standard deviation of the added noise term."),
@@ -26,18 +36,8 @@ h1 {color: firebrick;}"
     checkboxInput("lm", "Show fitted curve", FALSE),
     p("If you need help, remember the goal is to minmize the residual sum of squares (RSS). This button
       will display the RSS, as well as the degree you chose."),
-    checkboxInput("show_rss", "Show RSS", FALSE),
+    checkboxInput("show_rss", "Show RSS", TRUE),
     p("Do you want to see the true curve? This button shows the polynomial to which we added noise."),
     checkboxInput("poly", "Show polynomial", FALSE)
-    ),
-  
-  # Show a plot of the generated distribution
-  mainPanel(
-    p("The scatterplot shown below is a polynomial function with normally-distributed noise added to it.
-    It has the form y = a*(x)^5 + b*(x-10)^4 + c*(x-10)^3 + d*(x)^2 + c*(x) + constant +epsilon, 
-    where any of the coefficients can be zero. Can you guess the degree of the polynomial?"),
-    p("The side panel can help you check your guess."),
-    plotOutput("plot1", height = 600, width = 600),
-    tableOutput("rss")
-  )
+    )
 ))
