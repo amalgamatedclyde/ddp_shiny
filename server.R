@@ -49,21 +49,39 @@ shinyServer(function(input, output) {
   output$plot1 <- renderPlot({
     # par(mar = c(5.1, 4.1, 0, 1))
     sd <- input$sd
+    set.seed(314159)
     noise <- rnorm(length(x), mean=0, sd=sd)
     noisy.poly <- y + noise
-    plot(x,noisy.poly,col='deepskyblue4',xlab='x',main='Observed data')
+    plot(x,noisy.poly,col='deepskyblue4',xlab='x',main='Polynomial With Normally Distributed Noise')
+    model <- lm(noisy.poly ~ poly(x, as.integer(input$degree)))
+    predicts <- predict(model, data.frame(x=x))
+    rss <<- round(sum((residuals(model))^2))
     if(input$poly){
-      legend("bottomright",c("Observ.","Signal","Predicted"), col=c("deepskyblue4","red","green"), lwd=3)
+      legend("topleft",c("Observ.","Signal","Predicted"), col=c("deepskyblue4","red","green"), lwd=3)
       lines(x,y,col='firebrick1',lwd=3)
     }
     if(input$lm){
-      model <- lm(noisy.poly ~ poly(x, input$degree))
       predicted.intervals <- predict(model,data.frame(x=x),interval='confidence', level=0.99)
       lines(x,predicted.intervals[,1],col='green',lwd=3)
-      lines(x,predicted.intervals[,2],col='black',lwd=1)
-      lines(x,predicted.intervals[,3],col='black',lwd=1)
+#       lines(x,predicted.intervals[,2],col='black',lwd=1)
+#       lines(x,predicted.intervals[,3],col='black',lwd=1)
     }
-  })
+  },height=600, width=600)
+
   
+  # output$summ <- renderPrint(summary(lm(noisy.poly ~ poly(x, input$degree))))
+#   predicts <- predict(model, data.frame(x=x))
+#   rss <- sum((predicts-y)^2)
+  # if(rss)makeReactiveBinding(rss)
+
+    output$rss <- renderTable(if(input$show_rss){
+      data.frame("Degree"= input$degree, "Noise"= input$sd,
+                 "RSS" = format(round(rss,3), scientific = T))}, include.rownames = FALSE)
+                                       
+  
+  
+  # eventReactive(eventExpr, valueExpr, event.env = parent.frame(), event.quoted = FALSE, value.env = parent.frame(), value.quoted = FALSE, label = NULL, domain = getDefaultReactiveDomain(), ignoreNULL = TRUE)  
+
+                           
   
 })

@@ -44,11 +44,11 @@ if(degree==1){
   d <- deg1[4] 
   e <- deg1[5]  
 }
-y <-  a*(x)^5 + b*(x-10)^4 + c*(x-10)^3 + d*(x)^2 + c*(x) + constant
+y <-  a*(x-10)^5 + b*(x-10)^4 + c*(x-10)^3 + d*(x-10)^2 + c*(x) + constant
 sd <- sample(seq(200,1000, by=10), 1)
 noise <- rnorm(length(x), mean=0, sd=sd)
 noisy.poly <- y + noise
-plot(x,noisy.poly,col='deepskyblue4',xlab='x',main='Observed data')
+plot(x,y,col='deepskyblue4',xlab='x',main='Observed data')
 
 model <- lm(noisy.poly ~ poly(x, degree))
 # model <- lm(noisy.poly ~ x + I(x^2) + I(x^3))
