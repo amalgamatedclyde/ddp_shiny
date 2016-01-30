@@ -34,7 +34,7 @@ div #rss {margin-left: 60%; margin-top: -400px; margin-left: 70%;}
     selectInput("degree", "Predict the degree", c(1:5), selected = NULL, multiple = FALSE, selectize = TRUE, width = NULL, size = NULL),
     p("This button will toggle the display of the fitted curve. How well does it fit the data?"),
     checkboxInput("lm", "Show fitted curve", FALSE),
-    p("If you need help, remember the goal is to minmize the residual sum of squares (RSS). This button
+    p("If you need help, remember the goal is to minimize the residual sum of squares (RSS). This button
       will display the RSS, as well as the degree you chose."),
     checkboxInput("show_rss", "Show RSS", TRUE),
     p("Do you want to see the true curve? This button shows the polynomial to which we added noise."),
